@@ -1,9 +1,6 @@
 var pass;
 var sub=0;
 
-$(document).ready( function() {
-    $('#date').val(new Date().toDateInputValue());
-});​
 
 function valid12()
 {
@@ -237,6 +234,7 @@ $(document).ready(function(){
   });
 });
 
+
 $(document).ready(function(){
 		var c=document.getElementById("myselect");
 		var n=c.selectedIndex;
@@ -257,6 +255,7 @@ $(document).ready(function(){
 		}
 		
 	});
+
 function checkk(){
 
 var p1=document.getElementById("p1").value;
