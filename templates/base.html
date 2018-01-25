@@ -16,6 +16,7 @@
 	<link href="{% static "/Default.css" %}" rel="stylesheet" >	
 	<script type="text/javascript"  src="{% static "/jquery.js" %}"></script>
 	<script>
+
 		$(document).ready(function()
 		{
 			//alert($(window).width());
@@ -33,7 +34,7 @@
 	<script type="text/javascript" src="{% static "/bootstrap.js" %}"></script>
 	<script type="text/javascript" src="{% static "/man.js" %}"></script>
 </head>
-<body>
+<body onload="$('#myCarousel').carousel()">
 	<div class="wrap">
 		<div class="header">
 			<div style="float:left;width:150px;">

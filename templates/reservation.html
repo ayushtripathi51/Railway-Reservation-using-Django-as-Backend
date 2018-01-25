@@ -19,8 +19,10 @@
 					    <tr><div class="alert alert-danger">
 				                <strong>{{ error|escape }}</strong>
 				            </div>
+				            
 				    	</tr>
 				        {% endfor %}
+
 				    	{% for error in form.non_field_errors %}
 					    <tr>
 				            <div class="alert alert-danger">
@@ -59,37 +61,48 @@
 						</tr>
 						<tr>
 							<th style="border-top:0px;"><label> Date</label></th>
-							<td style="border-top:0px;"><input type="text"  class="input-block-level input-medium" name="date" id="date" value="{{ retained_data.date}}" readonly></td>
+							<td style="border-top:0px;"><input type="text"  class="input-block-level input-medium" name="doj" id="date" value="{{ retained_data.doj}}" readonly></td>
 						</tr>
 					{% else %}
 						<tr>
 							<th style="border-top:0px;"><label> From </label></th>	
-							<td style="border-top:0px;"><select  class="input-block-level" name="boarding_station" id="fr" >
-							{% for i in station_req %}
-								<option value="{{i.station_id}}">{{i.station_id}}</option>
-							{% endfor %}
+							<td style="border-top:0px;">
+
+								<input  list="boarding"class="input-block-level" name="boarding_station" id="fr" >
+								<datalist id="boarding">
+								{% for i in station_req %}
+									<option value="{{i.station_id}}">{{i.station_id}}</option>
+								{% endfor %}
+								</datalist>
 							</td>
 						</tr>
 						<tr>
 							<th style="border-top:0px;"><label> To </label></th>
-							<td style="border-top:0px;"><select  class="input-block-level" name="destination_station" id="to1">
-							{% for i in station_req %}
-								<option value="{{i.station_id}}">{{i.station_id}}</option>
-							{% endfor %}
+							<td style="border-top:0px;">
+								<input  list="destination" class="input-block-level" name="destination_station" id="to1">
+								<datalist id="destination">
+								{% for i in station_req %}
+									<option value="{{i.station_id}}">{{i.station_id}}</option>
+								{% endfor %}
+								</datalist>
 							</td>
 						</tr>
 						<tr>
 							<th style="border-top:0px;"><label> Quota </label></th>
 							<td style="border-top:0px;">
-							<select name="quota" >
-								<option value="General" selected="true">General</option>
-								<option value="Ladies">Ladies</option>
+							<input list="quota" name="quota" >
+								<datalist id="quota">
+									<option value="General" selected="true">General</option>
+									<option value="Ladies">Ladies</option>
+								</datalist>
 							</select>
 							</td>
 						</tr>
 						<tr>
 							<th style="border-top:0px;"><label> Date</label></th>
-							<td style="border-top:0px;"><input class="input-block-level input-medium" name="doj" id="date" placeholder="Date" type="date" ></td>
+							<td style="border-top:0px;">
+								<input class="input-block-level input-medium" name="doj" id="date" placeholder="Date" type="date" value="{% now 'Y-m-d' %}" min="{% now 'Y-m-d' %}" max="{{ dt }}">
+							</td>
 						</tr>
 					{% endif %}
 						<tr>
@@ -109,13 +122,13 @@
 				<th style="border-top:0px;"> Orig. </th>
 				<th style="border-top:0px;"> Des. </th>
 			</tr>
-		
+				{{i}}
 				{% for i in data %}
 					{% for j in i %}
 						<tr class="text-error">
 							<td > {{ j.train_number }} </td>
 							<td > 
-							<a class="text-error" href="/reservation_details?train_num={{j.train_number}}&from={{retained_data.boarding_station}}&to={{retained_data.destination_station}}&doj={{retained_data.date}}&quota={{retained_data.quota}}">{{ j.train_name }}</a></td>
+							<a href="/reservation_details?train_num={{j.train_number}}&from={{retained_data.boarding_station}}&to={{retained_data.destination_station}}&doj={{retained_data.doj}}&quota={{retained_data.quota}}">{{ j.train_name }}</a></td>
 							<td > {{ j.origination }} </td>
 							<td > {{ j.destination }} </td>
 						</tr>

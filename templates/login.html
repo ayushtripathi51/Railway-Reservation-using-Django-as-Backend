@@ -44,10 +44,9 @@
 		<div class="navbar-inner">
 			<div class="container" >
 			<a class="brand" href="/" >HOME</a>
-			<a class="brand" href="/train/" >FIND TRAIN</a>
+			<a class="brand" href="/train/" >SEARCH TRAIN</a>
 			<a class="brand" href="/reservation/">RESERVATION</a>
 			<a class="brand" href="/profile/">PROFILE</a>
-			<a class="brand" href="/contact/">CONTACT</a>
 			{% if request.session.username is not None %}
 				{% ifnotequal "invalid" request.session.username %}
 					<a class="brand" href="/display/">TICKETS</a>
@@ -57,7 +56,7 @@
 			{% else %}
 				<a class="brand" href="/about/">ABOUT US</a>
 			{% endif %}
-			
+			<a class="brand" href="/contact/">CONTACT</a>
 			</div>
 		</div>
 	</div>
