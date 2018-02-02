@@ -33,10 +33,10 @@ def login(request):
 			obj=form.cleaned_data	
 			flag=0
 			for p in user_database.objects.all():
-				if(p.email_id==obj['username'] and p.password==obj['password']):
+				if((p.email_id==obj['username'] or p.username==obj['username'] )and p.password==obj['password']):
 					flag=1
 					request.session['username']=p.email_id
-					request.session['firstname']=p.first_name
+					request.session['firstname']=str(p.first_name).capitalize()
 					return HttpResponseRedirect("/")
 			if(flag==0):
 				request.session['username']="invalid"
@@ -140,9 +140,7 @@ def train(request):
 					st2="No Direct Train from "+str(obj['source']).upper()+" to "+str(obj['destination']).upper()+"."
 					messages.error(request,st2)
 			else:
-				print(obj)
 				if(obj['source2'] !=""):
-					print("aala re")
 					obj4	=	train_database.objects.filter(train_number=obj['source2'])
 					obj5	=	train_week_schedule.objects.filter(train_number=obj['source2'])
 					q_dict	={
@@ -161,7 +159,6 @@ def train(request):
 					dict_q			=	QueryDict('',mutable=True)
 					dict_q.update(q_dict)							
 					data.append(q_dict)
-					print(data)
 					if(data):
 						pass
 					else:
@@ -182,19 +179,14 @@ def reservation(request):
 	val 	=	check_session(request)
 	if(val):
 		station_req 	=	station.objects.all()
-		print(station_req)
+		case=0
 		if(request.method=="POST"):	
 			form 	=	train_search_form(request.POST)
-			c=0
 			data 	=	list()
 			if(form.is_valid()):
 				obj 	= 	form.cleaned_data
 				obob 	=	train_details.objects.all()
-				print(obob[0].station_id)
-				print(obob[1].station_id)
 				obj1	=	train_details.objects.filter(station_id=obj['boarding_station'])
-				print(str(obj['boarding_station']).upper())
-				print(obj1)
 				flag=0	
 				if(obj1 is not None):
 					for obj2 in obj1:
@@ -214,10 +206,15 @@ def reservation(request):
 					flag=1
 				if(flag==1):
 					messages.error("No such Station as quered.")		
-			return render(request,'reservation.html',{'form':form,'station_req':station_req})
+			else:
+				case=1
 		else:
+			case=1
+		if(case==1):
+			dt = datetime.datetime.now() + datetime.timedelta(hours=2160)
+			dt = dt.strftime("%Y-%m-%d")
 			form 	=	train_search_form()
-		return render(request,'reservation.html',{'form':form,'station_req':station_req})
+		return render(request,'reservation.html',{'form':form,'station_req':station_req,'dt':dt})
 
 	else:
 		messages.error(request,'Please Login First.')
@@ -231,12 +228,9 @@ def reservation_details(request):
 	if(request.method=="POST"):
 		form 	=	passenger_details_form(request.POST)
 		if(form.is_valid()):
-			print("aaya abhi")
 			obj					=	form.cleaned_data
-			print(obj)
 			user_database_obj	=	user_database.objects.get(email_id=request.session['username'])
 			train_details_obj	=	train_details.objects.filter(train_number=obj['train_number']).filter(station_id=str(obj['from_station']))
-			print(train_details_obj)
 			obj1				=	ticket.objects.create(
 				ticket_id			=	user_database_obj,		# must be a database instance
 				boarding_station	=	obj['from_station'],
@@ -259,8 +253,7 @@ def reservation_details(request):
 				)
 			return HttpResponseRedirect('/display')
 		else:
-			print("form not valid")
-		return render(request,'reser.html',{'form':form})	
+			return render(request,'reser.html',{'form':form})	
 	else:
 		form 	=	passenger_details_form()
 	return render(request,'reser.html',{'form':form})
@@ -280,7 +273,6 @@ def display(request):
 				seat_obj			=	seat_status.objects.get(ticket_number=str(i.pnr_no))
 				train_nono 			=	str(seat_obj.train_number).split(' ')
 				train_nono			=	train_nono[0]
-				#print(train_database_obj.train_name)
 				q_dict	={
 					'train_number':train_nono,
 					'boarding_station':i.boarding_station,
@@ -292,7 +284,6 @@ def display(request):
 				dict_q			=	QueryDict('',mutable=True)
 				dict_q.update(q_dict)							
 				data.append(q_dict)
-				print(data)
 			return render(request,'display.html',{'data':data,'flag':flag})
 		else:
 			messages.error(request,'No Tickets Booked Yet.')
@@ -346,7 +337,7 @@ def profile(request):
 					messages.success(request, 'Profile details updated.')
 				return render(request,'profile.html',{'form':form,'data':obj2[0]})
 		else:
-			data		=	user_database.objects.get(first_name=request.session['firstname'])
+			data		=	user_database.objects.get(first_name=str(request.session['firstname']).lower())
 		return render(request,'profile.html',{'data':data})
 	else:
 		messages.error(request,'Please Login First.')
@@ -380,3 +371,7 @@ def payment_module(request):
 	form = PayPalPaymentsForm(initial=paypal_dict)
 	context = {"form": form}
 	return render(request, "payment.html", context)
+
+
+def schedule(request):
+	return render(request,'schedule.html',{})

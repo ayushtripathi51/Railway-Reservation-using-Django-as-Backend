@@ -4,6 +4,7 @@ import string
 # Create your models here.
 
 class user_database(models.Model):
+	username		=	models.CharField(max_length=120,null=False)
 	first_name		=	models.CharField(max_length=120,null=False)
 	last_name		=	models.CharField(max_length=120,null=False)
 	email_id		=	models.EmailField(primary_key=True,max_length=120,null=False)

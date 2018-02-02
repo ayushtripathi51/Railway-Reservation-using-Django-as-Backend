@@ -41,14 +41,18 @@ class login_credentials_form(forms.Form):
 class train_search_form(forms.Form):
 	boarding_station		=	forms.CharField(required=True)
 	destination_station		=	forms.CharField(required=True)
-	quota					=	forms.CharField(required=False)
-	date					=	forms.DateField(required=True)
+	quota					=	forms.CharField(required=True)
+	doj						=	forms.DateField(required=True)
 
 	def clean(self):
 		if(self.cleaned_data.get('boarding_station')==self.cleaned_data.get('destination_station')):
 			print("SOURCE == Destination")
 			raise ValidationError("Source and Destination can't be same.")
+		if(self.cleaned_data.get('doj') is None):
+			print("date not coming")
+			raise ValidationError("date error.")
 		return self.cleaned_data
+
 
 
 class find_train_schedule_form(forms.Form):
