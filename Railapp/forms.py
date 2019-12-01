@@ -27,7 +27,7 @@ class User_details_form(forms.Form):
 		if (self.cleaned_data.get('password')!=self.cleaned_data.get('cpsd')):
 			raise ValidationError("passwords do not match.")
 		obj=user_database.objects.filter(email_id=self.cleaned_data.get('email_id'))
-		if (obj is not None):
+		if (len(obj)>0):
 			raise ValidationError("Email already exists.")
 		return self.cleaned_data
 

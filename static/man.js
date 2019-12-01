@@ -26,7 +26,7 @@ function valid12()
 // password validation 
 	function check1()
 	{
-		var c=document.forms["signup"]["psd"].value;
+		var c=document.forms["signup"]["password"].value;
 		//alert(c.length);
 		if(c.length < 8 )
 		{

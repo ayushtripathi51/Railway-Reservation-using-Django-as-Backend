@@ -63,7 +63,8 @@ def signup(request):
 		if(form.is_valid()):
 			obj=form.cleaned_data
 			obj3=user_database.objects.filter(email_id=obj['email_id'])
-			if(obj3 is None):
+			print(obj3)
+			if(len(obj3)==0):
 				obj2=user_database.objects.create(
 					first_name		=	obj['first_name'],
 					last_name		=	obj['last_name'],
@@ -77,10 +78,10 @@ def signup(request):
 					sec_ans			=	obj['sec_ans'],
 					)
 				request.session['username']=obj['first_name']
-				request.session['firstname']=p.first_name	
+				request.session['firstname']=obj2.first_name	
 				return HttpResponseRedirect("/")
 			else:
-				messages.error("User Already Exists")
+				messages.error(request,"User Already Exists")
 				return render(request,'signup.html',{})
 	else:
 		form=User_details_form()
